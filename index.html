@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MedTerm Quiz – Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #e3f2fd, #ffffff);
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #1a73e8;
+      color: white;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    main {
+      max-width: 960px;
+      margin: auto;
+      padding: 30px 20px;
+    }
+
+    h1, h2 {
+      color: #1a73e8;
+    }
+
+    .section {
+      margin-bottom: 50px;
+    }
+
+    .quiz-container {
+      background: linear-gradient(to bottom right, #ffffff, #e0f7fa);
+      padding: 25px 30px;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: auto;
+      transition: transform 0.3s;
+    }
+
+    .quiz-container:hover {
+      transform: scale(1.01);
+    }
+
+    .question {
+      font-size: 1.25em;
+      margin: 20px 0;
+    }
+
+    .choices button {
+      background: #c5e1f5;
+      border: 1px solid #1976d2;
+      padding: 10px;
+      margin: 6px 0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .choices button:hover {
+      background: #bbdefb;
+      color: #0d47a1;
+    }
+
+    #feedback {
+      margin-top: 12px;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+
+    #score {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 1.2em;
+      color: #004d40;
+    }
+
+    #restart-btn {
+      display: none;
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: #00796b;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    #restart-btn:hover {
+      background: #004d40;
+    }
+
+    footer {
+      text-align: center;
+      background: #e3f2fd;
+      padding: 20px;
+      margin-top: 40px;
+    }
+
+    a {
+      color: #1a73e8;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    img.banner {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 15px;
+    }
+
+    .emoji-title {
+      font-size: 1.5em;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🧠 MedTerm Quizzer</h1>
+    <p>Interactive Biomedical Quiz by Naga vaishnavi R </p>
+  </header>
+
+  <main>
+    <section class="section">
+      <h2>📘 About This Project</h2>
+      <p>MedTerm Quizzer is a lightweight, interactive web application designed to help users test and improve their knowledge of common medical terminology. 
+
+It was developed using HTML, CSS, and JavaScript, making it fast, responsive, and easy to run in any browser.This project demonstrates my ability to:
+
+Design engaging front-end applications
+
+Implement interactive quiz logic in pure JavaScript
+
+Apply UI/UX principles to scientific content
+
+Add audio-visual feedback for better learning experience.</p>
+    </section>
+
+    <section class="section">
+      <h2 class="emoji-title">🎯 Take the Quiz</h2>
+      <div class="quiz-container">
+        <img src="https://cdn.pixabay.com/photo/2017/02/01/16/46/quiz-2038923_1280.png" alt="Quiz Banner" class="banner">
+        <div id="question-container">
+          <div class="question" id="question"></div>
+          <div class="choices" id="choices"></div>
+          <div id="feedback"></div>
+          <div id="score"></div>
+          <button id="restart-btn" onclick="restartQuiz()">🔁 Play Again</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 Naga vaishnavi R | <a href="#">GitHub</a> | <a href="#">LinkedIn</a>
+  </footer>
+
+  <!-- Sound Effects -->
+  <audio id="correctSound" src="https://www.soundjay.com/button/sounds/button-09.mp3"></audio>
+  <audio id="wrongSound" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
+  <audio id="winSound" src="https://www.soundjay.com/human/sounds/applause-01.mp3"></audio>
+
+  <script>
+    const quizData = [
+      { question: "🫀 What does 'ECG' stand for?", choices: ["Electrocardiogram", "Electroencephalogram", "Endoscopic Chest Graph", "External Circulation Guide"], answer: "Electrocardiogram" },
+      { question: "🩺 What is a 'stent' used for?", choices: ["Measuring blood pressure", "Keeping blood vessels open", "Scanning bones", "Delivering insulin"], answer: "Keeping blood vessels open" },
+      { question: "🧲 Which imaging technique uses magnetic fields?", choices: ["CT Scan", "X-Ray", "MRI", "Ultrasound"], answer: "MRI" },
+      { question: "🧪 What does 'IV' stand for in medical terms?", choices: ["Intravenous", "Intramuscular", "Intravascular", "Internal Valve"], answer: "Intravenous" },
+      { question: "🧬 DNA stands for?", choices: ["Deoxyribonucleic Acid", "Dinucleic Acid", "Double Helix Acid", "Deoxyribonitric Acid"], answer: "Deoxyribonucleic Acid" },
+      { question: "🫁 What organ is primarily affected by COPD?", choices: ["Heart", "Liver", "Lungs", "Kidneys"], answer: "Lungs" },
+      { question: "💊 What does 'Rx' mean?", choices: ["Treatment", "Medical record", "Prescription", "Recovery"], answer: "Prescription" },
+      { question: "💉 What is insulin used for?", choices: ["Pain relief", "Diabetes treatment", "Infection control", "Cancer therapy"], answer: "Diabetes treatment" },
+      { question: "🩸 What blood type is the universal donor?", choices: ["O-", "A+", "B-", "AB+"], answer: "O-" },
+      { question: "🧠 What does 'EEG' measure?", choices: ["Heart rhythms", "Brain activity", "Muscle movement", "Blood pressure"], answer: "Brain activity" },
+      { question: "🦴 Which mineral is essential for bone health?", choices: ["Potassium", "Iron", "Calcium", "Zinc"], answer: "Calcium" },
+      { question: "🏥 What does 'ICU' stand for?", choices: ["Internal Care Unit", "Intensive Care Unit", "Immediate Crisis Unit", "Inpatient Clinic Unit"], answer: "Intensive Care Unit" },
+      { question: "🔬 What does a 'biopsy' involve?", choices: ["Blood draw", "Urine sample", "Tissue sample", "X-ray scan"], answer: "Tissue sample" }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById("question");
+    const choicesEl = document.getElementById("choices");
+    const feedbackEl = document.getElementById("feedback");
+    const scoreEl = document.getElementById("score");
+    const restartBtn = document.getElementById("restart-btn");
+
+    const correctSound = document.getElementById("correctSound");
+    const wrongSound = document.getElementById("wrongSound");
+    const winSound = document.getElementById("winSound");
+
+    function loadQuestion() {
+      const q = quizData[currentQuestion];
+      questionEl.textContent = q.question;
+      choicesEl.innerHTML = "";
+      feedbackEl.textContent = "";
+
+      q.choices.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.textContent = choice;
+        btn.onclick = () => handleAnswer(choice);
+        choicesEl.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(choice) {
+      const correct = quizData[currentQuestion].answer;
+      if (choice === correct) {
+        feedbackEl.innerHTML = "✅ Correct!";
+        correctSound.play();
+        score++;
+      } else {
+        feedbackEl.innerHTML = `❌ Wrong! Correct answer: <strong>${correct}</strong>`;
+        wrongSound.play();
+      }
+
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        setTimeout(loadQuestion, 1800);
+      } else {
+        setTimeout(showScore, 1800);
+      }
+    }
+
+    function showScore() {
+      questionEl.textContent = "🎉 Quiz Complete!";
+      choicesEl.innerHTML = "";
+      feedbackEl.textContent = "";
+      scoreEl.textContent = `🏆 Your score: ${score} / ${quizData.length}`;
+      winSound.play();
+      restartBtn.style.display = "block";
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      scoreEl.textContent = "";
+      restartBtn.style.display = "none";
+      loadQuestion();
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
